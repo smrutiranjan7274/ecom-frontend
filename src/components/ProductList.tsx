@@ -11,6 +11,7 @@ import { LazyLoadImage } from 'react-lazy-load-image-component';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import placeholderImage from '../assets/placeholder_400x400.svg';  // adjust path as needed
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 /**
  * Product interface defining the shape of product data
@@ -33,6 +34,8 @@ interface Product {
  * - Hover animations on cards
  */
 const ProductList = () => {
+    useDocumentTitle('Products');
+
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);

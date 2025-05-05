@@ -1,7 +1,10 @@
 import { Box, Typography, Button, Container, Grid } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 const HomePage = () => {
+    useDocumentTitle('Home');
+
     return (
         <Container>
             <Box sx={{ mt: 8, mb: 4, textAlign: 'center' }}>

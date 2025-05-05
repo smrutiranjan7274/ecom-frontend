@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import HomePage from './components/HomePage';
 import ProductList from './components/ProductList';
 import { theme } from './theme';
+import { useDocumentTitle } from './hooks/useDocumentTitle';
 
 /**
  * Root application component
@@ -13,6 +14,12 @@ import { theme } from './theme';
  * - Product list page (ProductList)
  * - Cart page (placeholder)
  */
+
+const CartPage = () => {
+  useDocumentTitle('Cart');
+  return <div>Cart Page</div>;
+};
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
@@ -38,7 +45,7 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/products" element={<ProductList />} />
-              <Route path="/cart" element={<div>Cart Page</div>} />
+              <Route path="/cart" element={<CartPage />} />
             </Routes>
           </Container>
         </Box>
