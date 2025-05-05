@@ -4,10 +4,13 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 import apiClient from '../api/client';
-import { Alert, CircularProgress } from '@mui/material';
+import { Alert, CircularProgress, Stack } from '@mui/material';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import 'react-lazy-load-image-component/src/effects/blur.css';
+import placeholderImage from '../assets/placeholder_400x400.svg';  // adjust path as needed
 
 /**
  * Product interface defining the shape of product data
@@ -16,7 +19,6 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 interface Product {
     id: number;
     name: string;
-    description: string;
     price: number;
     imageUrl?: string;
 }
@@ -79,9 +81,9 @@ const ProductList = () => {
     }
 
     return (
-        <Grid container spacing={3}>
+        <Grid container spacing={3} sx={{ px: { xs: 2, sm: 0 } }}>
             {products.map((product) => (
-                <Grid size={{ xs: 12, sm: 6, md: 4 }} key={product.id}>
+                <Grid size={{ xs: 12, md: 4, sm: 6 }} key={product.id}>
                     <Card sx={{
                         height: '100%',
                         display: 'flex',
@@ -93,45 +95,59 @@ const ProductList = () => {
                     }}>
                         {/* Lazy-loaded Image */}
                         <LazyLoadImage
-                            src={product.imageUrl}
+                            src={product.imageUrl || placeholderImage}
                             alt={product.name}
-                            height={200}
-                            width="100%"
                             effect="blur" // Blur-to-load effect
-                            placeholderSrc="/placeholder-lowres.jpg" // Tiny placeholder (1-2KB)
+                            placeholderSrc={placeholderImage} // Tiny placeholder (1-2KB)
+                            onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.src = placeholderImage;
+                            }}
                             style={{
-                                objectFit: 'cover',
-                                borderBottom: '1px solid rgba(0,0,0,0.1)',
-                                minHeight: '200px'
+                                width: '100%',
+                                height: '250px',
+                                objectFit: 'contain',
+                                padding: '1rem',
+                                backgroundColor: '#f5f5f5'
                             }}
                         />
 
-
-                        <CardContent sx={{ flexGrow: 1 }}>
+                        <CardContent sx={{ flexGrow: 1, pt: 2, pb: 1 }}>
                             <Typography gutterBottom variant="h5" component="h2">
                                 {product.name}
                             </Typography>
-                            <Typography variant="body2" color="text.secondary" paragraph>
-                                {product.description}
-                            </Typography>
-                            <Typography variant="h6" sx={{ mt: 2, fontWeight: 'bold' }}>
+                            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
                                 ${product.price.toFixed(2)}
                             </Typography>
                         </CardContent>
 
-                        <Button
-                            variant="contained"
-                            fullWidth
-                            sx={{
-                                mt: 'auto',
-                                backgroundColor: '#1976d2',
-                                '&:hover': {
-                                    backgroundColor: '#1565c0'
-                                }
-                            }}
-                        >
-                            Add to Cart
-                        </Button>
+                        <Box sx={{ p: 2, textAlign: 'center' }}>
+                            <Button
+                                variant="contained"
+                                size="large"
+                                sx={{
+                                    px: 4,
+                                    py: 1,
+                                    backgroundColor: '#1976d2',
+                                    borderRadius: '5px',
+                                    '&:hover': {
+                                        backgroundColor: '#1565c0',
+                                        transform: 'translateY(-2px)',
+                                        boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+                                    },
+                                    transition: 'all 0.2s ease-in-out',
+                                }}
+                            >
+                                <Stack
+                                    direction="row"
+                                    spacing={1}
+                                    alignItems="center"
+                                >
+                                    <ShoppingCartIcon />
+                                    <span>Add to Cart</span>
+                                </Stack>
+                            </Button>
+                        </Box>
                     </Card>
                 </Grid>
             ))}
