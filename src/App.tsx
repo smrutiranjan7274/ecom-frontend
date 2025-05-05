@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Box, Container, ThemeProvider, CssBaseline } from '@mui/material';
 import Navbar from './components/Navbar';
 import HomePage from './components/HomePage';
@@ -24,7 +24,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <BrowserRouter>
+      <Router basename="/ecom-frontend">
         <Box sx={{
           minHeight: '100vh',
           display: 'flex',
@@ -49,7 +49,7 @@ function App() {
             </Routes>
           </Container>
         </Box>
-      </BrowserRouter>
+      </Router>
     </ThemeProvider>
   );
 }
