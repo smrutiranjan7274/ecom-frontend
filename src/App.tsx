@@ -4,9 +4,9 @@ import Navbar from './components/Navbar';
 import HomePage from './components/HomePage';
 import ProductList from './components/ProductList';
 import { theme } from './theme';
-import { useDocumentTitle } from './hooks/useDocumentTitle';
 import LoginPage from './components/LoginPage';
 import RegisterPage from './components/RegisterPage';
+import CartPage from './components/CartPage';
 
 /**
  * Root application component
@@ -17,17 +17,11 @@ import RegisterPage from './components/RegisterPage';
  * - Cart page (placeholder)
  */
 
-const CartPage = () => {
-  useDocumentTitle('Cart');
-  return <div>Cart Page</div>;
-};
-
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router basename="/ecom-frontend/">
-
+      <Router>
         <Navbar />
         <Container sx={{
           mt: 4,

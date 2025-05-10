@@ -15,7 +15,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import apiClient from '../api/client';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
-import placeholderImage from '../assets/placeholder_400x400.svg';
+import placeholderImage from '../assets/images/placeholder_400x400.svg';
 
 // Types
 interface Product {
