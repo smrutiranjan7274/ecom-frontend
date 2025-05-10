@@ -5,6 +5,8 @@ import HomePage from './components/HomePage';
 import ProductList from './components/ProductList';
 import { theme } from './theme';
 import { useDocumentTitle } from './hooks/useDocumentTitle';
+import LoginPage from './components/LoginPage';
+import RegisterPage from './components/RegisterPage';
 
 /**
  * Root application component
@@ -46,6 +48,8 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/products" element={<ProductList />} />
               <Route path="/cart" element={<CartPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
             </Routes>
           </Container>
         </Box>
