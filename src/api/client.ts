@@ -1,10 +1,10 @@
-import axios from 'axios';
+import axios, { type AxiosInstance } from 'axios';
 
 /**
  * Axios instance configured for the e-commerce API
  * Handles all HTTP requests to the backend server
  */
-const apiClient = axios.create({
+const apiClient: AxiosInstance = axios.create({
     baseURL: 'http://localhost:8080/api',  // Spring Boot backend URL
     headers: { 'Content-Type': 'application/json' },
 });

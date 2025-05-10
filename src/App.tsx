@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Box, Container, ThemeProvider, CssBaseline } from '@mui/material';
+import { Container, ThemeProvider, CssBaseline } from '@mui/material';
 import Navbar from './components/Navbar';
 import HomePage from './components/HomePage';
 import ProductList from './components/ProductList';
@@ -26,33 +26,22 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router basename="/ecom-frontend">
-        <Box sx={{
-          minHeight: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          backgroundColor: 'background.default'
+      <Router basename="/ecom-frontend/">
+
+        <Navbar />
+        <Container sx={{
+          mt: 4,
+          flex: 1,
+          px: { xs: 1, sm: 2, md: 3 },
         }}>
-          <Navbar />
-          <Container sx={{
-            mt: 4,
-            flex: 1,
-            px: { xs: 1, sm: 2, md: 3 },
-            animation: 'fadeIn 0.5s ease-in',
-            '@keyframes fadeIn': {
-              '0%': { opacity: 0, transform: 'translateY(10px)' },
-              '100%': { opacity: 1, transform: 'translateY(0)' }
-            }
-          }}>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/products" element={<ProductList />} />
-              <Route path="/cart" element={<CartPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
-            </Routes>
-          </Container>
-        </Box>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/products" element={<ProductList />} />
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+          </Routes>
+        </Container>
       </Router>
     </ThemeProvider>
   );

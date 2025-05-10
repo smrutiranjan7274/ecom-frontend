@@ -1,22 +1,33 @@
 import { AppBar, Toolbar, Typography, Button, IconButton, Drawer, List, ListItem, ListItemText, useTheme, useMediaQuery, Box } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const location = useLocation();
+    const navigate = useNavigate();
+    const isAuthenticated = false; // TODO: Replace with actual auth state
 
-    const menuItems = [
+    const baseMenuItems = [
         { text: 'Home', path: '/' },
         { text: 'Products', path: '/products' },
-        { text: 'Cart', path: '/cart' }
+        { text: 'Cart', path: '/cart' },
     ];
+
+    const menuItems = isAuthenticated
+        ? [...baseMenuItems, { text: 'Profile', path: '/profile' }]
+        : [...baseMenuItems, { text: 'Login', path: '/login' }, { text: 'Register', path: '/register' }];
 
     const isActive = (path: string) => {
         return location.pathname === path;
+    };
+
+    const handleLogout = () => {
+        // TODO: Implement logout logic
+        navigate('/login');
     };
 
     const drawer = (
@@ -37,6 +48,19 @@ const Navbar = () => {
                     <ListItemText primary={item.text} />
                 </ListItem>
             ))}
+            {isAuthenticated && (
+                <ListItem
+                    onClick={handleLogout}
+                    sx={{
+                        backgroundColor: 'transparent',
+                        '&:hover': {
+                            backgroundColor: 'primary.light',
+                        }
+                    }}
+                >
+                    <ListItemText primary="Logout" />
+                </ListItem>
+            )}
         </List>
     );
 
@@ -75,7 +99,7 @@ const Navbar = () => {
                         E-Commerce
                     </Typography>
                     {!isMobile && (
-                        <Box sx={{ display: 'flex', gap: 2 }}>
+                        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                             {menuItems.map((item) => (
                                 <Button
                                     component={Link}
@@ -103,6 +127,17 @@ const Navbar = () => {
                                     {item.text}
                                 </Button>
                             ))}
+                            {isAuthenticated && (
+                                <Button
+                                    onClick={handleLogout}
+                                    sx={{
+                                        color: 'error.main',
+                                        ml: 1
+                                    }}
+                                >
+                                    Logout
+                                </Button>
+                            )}
                         </Box>
                     )}
                 </Toolbar>
