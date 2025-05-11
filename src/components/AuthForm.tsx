@@ -89,9 +89,11 @@ const AuthForm = ({ mode }: AuthFormProps) => {
     };
 
     const handleAuthSuccess = (token: string) => {
-        localStorage.setItem('token', token);
-        showSnackbar('success', isRegister ? 'Registration successful!' : 'Login successful!');
-        setTimeout(() => navigate('/'), 1500);
+        if (!isRegister) {
+            localStorage.setItem('token', token);
+            showSnackbar('success', 'Login successful!');
+        }
+        setTimeout(() => navigate('/'), 1000);
     };
 
     const handleAuthError = (error: unknown) => {
@@ -120,7 +122,8 @@ const AuthForm = ({ mode }: AuthFormProps) => {
             if (response.data.token) {
                 handleAuthSuccess(response.data.token);
             } else {
-                showSnackbar('error', response.data.message || 'Authentication failed');
+                showSnackbar('success', response.data.toString());
+                handleAuthSuccess(response.data.toString());
             }
         } catch (error) {
             handleAuthError(error);

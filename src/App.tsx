@@ -23,11 +23,7 @@ function App() {
       <CssBaseline />
       <Router>
         <Navbar />
-        <Container sx={{
-          mt: 4,
-          flex: 1,
-          px: { xs: 1, sm: 2, md: 3 },
-        }}>
+        <Container>
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/products" element={<ProductList />} />
