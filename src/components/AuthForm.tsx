@@ -1,18 +1,10 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-    Box,
-    Button,
-    TextField,
-    Typography,
-    Paper,
-    Link as MuiLink,
-    Alert,
-    CircularProgress,
-    Snackbar
-} from '@mui/material';
+import { Box, Button, TextField, Typography, Paper, Link as MuiLink, Alert, CircularProgress, Snackbar } from '@mui/material';
 import apiClient from '../api/client';
 import type { AuthResponse } from '../types/auth.type';
+// Import validators and formatters
+import { isValidEmail, isStrongPassword } from '../utils/validators';
 
 // Constants
 const FORM_INITIAL_STATE = {
@@ -72,6 +64,18 @@ const AuthForm = ({ mode }: AuthFormProps) => {
     const validateForm = (): boolean => {
         if (!form.email || !form.password) {
             showSnackbar('error', 'Please fill all required fields');
+            return false;
+        }
+
+        // Use isValidEmail
+        if (!isValidEmail(form.email)) {
+            showSnackbar('error', 'Please enter a valid email address');
+            return false;
+        }
+
+        // Use isStrongPassword
+        if (!isStrongPassword(form.password)) {
+            showSnackbar('error', 'Password must be at least 8 characters, include at least 1 letter and 1 number');
             return false;
         }
 

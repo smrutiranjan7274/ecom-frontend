@@ -5,6 +5,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { useState } from 'react';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 // import placeHolderImage from '../assets/images/placeholder_400x400.svg';
+import { formatCurrency } from '../utils/formatters';
 
 interface CartItem {
     id: number;
@@ -57,7 +58,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: {
                         {item.name}
                     </Typography>
                     <Typography color="primary.main" sx={{ fontWeight: 600 }}>
-                        ${item.price.toFixed(2)}
+                        {formatCurrency(item.price)}
                     </Typography>
                 </Grid>
                 <Grid size={{ xs: 7, sm: 4 }}>
@@ -151,21 +152,21 @@ const CartPage = () => {
                                 <Stack spacing={2}>
                                     <Box display="flex" justifyContent="space-between">
                                         <Typography color="text.secondary">Subtotal</Typography>
-                                        <Typography>${subtotal.toFixed(2)}</Typography>
+                                        <Typography>{formatCurrency(subtotal)}</Typography>
                                     </Box>
                                     <Box display="flex" justifyContent="space-between">
                                         <Typography color="text.secondary">Shipping</Typography>
-                                        <Typography>${shipping.toFixed(2)}</Typography>
+                                        <Typography>{formatCurrency(shipping)}</Typography>
                                     </Box>
                                     <Box display="flex" justifyContent="space-between">
                                         <Typography color="text.secondary">Discount</Typography>
-                                        <Typography color="success.main">-${discountAmount.toFixed(2)}</Typography>
+                                        <Typography color="success.main">-{formatCurrency(discountAmount)}</Typography>
                                     </Box>
                                     <Divider />
                                     <Box display="flex" justifyContent="space-between">
                                         <Typography variant="h6">Total</Typography>
                                         <Typography variant="h6" color="primary.main">
-                                            ${total.toFixed(2)}
+                                            {formatCurrency(total)}
                                         </Typography>
                                     </Box>
                                     <Button
