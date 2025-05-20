@@ -1,12 +1,35 @@
-import { AppBar, Toolbar, Typography, Button, IconButton, Drawer, List, ListItem, ListItemText, useTheme, useMediaQuery, Box } from '@mui/material';
+/**
+ * Navigation Bar Component
+ * Provides main navigation interface with responsive design
+ * Features:
+ * - Responsive mobile/desktop layouts
+ * - Theme toggle functionality
+ * - Dynamic menu items based on authentication state
+ * - Mobile drawer navigation
+ */
+
+import { AppBar, Toolbar, Typography, Button, IconButton, Drawer, List, ListItem, ListItemText, useTheme as useMuiTheme, useMediaQuery, Box } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useTheme } from '../contexts/ThemeContext';
 
+/**
+ * Navbar Component
+ * Handles:
+ * - Responsive layout switching
+ * - Theme mode toggle
+ * - Navigation state
+ * - Authentication-based menu items
+ * - Mobile drawer navigation
+ */
 const Navbar = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
-    const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const muiTheme = useMuiTheme();
+    const { isDarkMode, toggleTheme } = useTheme();
+    const isMobile = useMediaQuery(muiTheme.breakpoints.down('sm'));
     const location = useLocation();
     const navigate = useNavigate();
     const isAuthenticated = false; // TODO: Replace with actual auth state
@@ -62,6 +85,12 @@ const Navbar = () => {
                 </ListItem>
             )}
         </List>
+    );
+
+    const ThemeToggleButton = () => (
+        <IconButton onClick={toggleTheme} color="primary" sx={{ ml: 1 }}>
+            {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
+        </IconButton>
     );
 
     return (
@@ -138,8 +167,10 @@ const Navbar = () => {
                                     Logout
                                 </Button>
                             )}
+                            <ThemeToggleButton />
                         </Box>
                     )}
+                    {isMobile && <ThemeToggleButton />}
                 </Toolbar>
             </AppBar>
             <Drawer
