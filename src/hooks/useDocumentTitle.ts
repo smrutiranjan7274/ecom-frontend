@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
-
-const APP_NAME = 'E-Commerce Store';
+import { APP_NAME } from '../constants/themeConstants';
 
 export const useDocumentTitle = (title?: string) => {
     useEffect(() => {

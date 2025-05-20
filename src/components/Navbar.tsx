@@ -1,12 +1,35 @@
-import { AppBar, Toolbar, Typography, Button, IconButton, Drawer, List, ListItem, ListItemText, useTheme, useMediaQuery, Box } from '@mui/material';
+/**
+ * Navigation Bar Component
+ * Provides main navigation interface with responsive design
+ * Features:
+ * - Responsive mobile/desktop layouts
+ * - Theme toggle functionality
+ * - Dynamic menu items based on authentication state
+ * - Mobile drawer navigation
+ */
+
+import { AppBar, Toolbar, Typography, Button, IconButton, Drawer, List, ListItem, ListItemText, useTheme as useMuiTheme, useMediaQuery, Box } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useTheme } from '../hooks/useTheme';
 
+/**
+ * Navbar Component
+ * Handles:
+ * - Responsive layout switching
+ * - Theme mode toggle
+ * - Navigation state
+ * - Authentication-based menu items
+ * - Mobile drawer navigation
+ */
 const Navbar = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
-    const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const muiTheme = useMuiTheme();
+    const { isDarkMode, toggleTheme } = useTheme();
+    const isMobile = useMediaQuery(muiTheme.breakpoints.down('sm'));
     const location = useLocation();
     const navigate = useNavigate();
     const isAuthenticated = false; // TODO: Replace with actual auth state
@@ -40,12 +63,21 @@ const Navbar = () => {
                     onClick={() => setMobileOpen(false)}
                     sx={{
                         backgroundColor: isActive(item.path) ? 'primary.light' : 'transparent',
+                        color: 'text.primary', // Add this to ensure proper text color
                         '&:hover': {
                             backgroundColor: 'primary.light',
+                            color: 'primary.contrastText' // Add this for better hover contrast
                         }
                     }}
                 >
-                    <ListItemText primary={item.text} />
+                    <ListItemText 
+                        primary={item.text}
+                        sx={{
+                            '& .MuiListItemText-primary': {
+                                color: 'inherit' // This ensures the text inherits the ListItem color
+                            }
+                        }} 
+                    />
                 </ListItem>
             ))}
             {isAuthenticated && (
@@ -53,8 +85,10 @@ const Navbar = () => {
                     onClick={handleLogout}
                     sx={{
                         backgroundColor: 'transparent',
+                        color: 'error.main', // Make logout button distinctly visible
                         '&:hover': {
-                            backgroundColor: 'primary.light',
+                            backgroundColor: 'error.main',
+                            color: 'error.contrastText'
                         }
                     }}
                 >
@@ -62,6 +96,12 @@ const Navbar = () => {
                 </ListItem>
             )}
         </List>
+    );
+
+    const ThemeToggleButton = () => (
+        <IconButton onClick={toggleTheme} color="primary" sx={{ ml: 1 }}>
+            {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
+        </IconButton>
     );
 
     return (
@@ -138,8 +178,10 @@ const Navbar = () => {
                                     Logout
                                 </Button>
                             )}
+                            <ThemeToggleButton />
                         </Box>
                     )}
+                    {isMobile && <ThemeToggleButton />}
                 </Toolbar>
             </AppBar>
             <Drawer
@@ -150,7 +192,10 @@ const Navbar = () => {
                 sx={{
                     '& .MuiDrawer-paper': {
                         width: 240,
-                        boxSizing: 'border-box'
+                        boxSizing: 'border-box',
+                        backgroundColor: 'background.paper', // Add this for proper background color
+                        borderRight: 1,
+                        borderColor: 'divider'
                     }
                 }}
             >

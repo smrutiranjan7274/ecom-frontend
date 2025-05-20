@@ -16,6 +16,7 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 import apiClient from '../api/client';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import placeholderImage from '../assets/images/placeholder_400x400.svg';
+import { formatCurrency } from '../utils/formatters';
 
 // Types
 interface Product {
@@ -99,7 +100,7 @@ const ProductCard = ({ product }: { product: Product }) => (
                     color: 'primary.main'
                 }}
             >
-                ${product.price.toFixed(2)}
+                {formatCurrency(product.price)}
             </Typography>
 
             <Button
