@@ -30,7 +30,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ThemeProvider>
       <CssBaseline />
-      <BrowserRouter>
+      <BrowserRouter basename='/ecom-frontend'>
         <App />
       </BrowserRouter>
     </ThemeProvider>
