@@ -256,17 +256,18 @@ const AuthForm = ({ mode }: AuthFormProps) => {
         <>
             <Box
                 sx={{
-                    position: 'fixed',
-                    inset: 0,
+                    minHeight: '100vh',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
+                    py: { xs: 4, sm: 6 },
+                    px: 2,
                 }}
             >
                 <Paper
                     elevation={4}
                     sx={{
-                        p: { xs: 4, sm: 6 },
+                        p: { xs: 3, sm: 6 },
                         width: '100%',
                         maxWidth: 420,
                         borderRadius: 4,
