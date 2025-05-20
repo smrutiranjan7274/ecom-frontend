@@ -4,8 +4,8 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { useState } from 'react';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
-// import placeHolderImage from '../assets/images/placeholder_400x400.svg';
 import { formatCurrency } from '../utils/formatters';
+import { INITIAL_CART_ITEMS } from '../constants/cartConstants';
 
 interface CartItem {
     id: number;
@@ -14,23 +14,6 @@ interface CartItem {
     quantity: number;
     imageUrl: string;
 }
-
-const initialItems: CartItem[] = [
-    {
-        id: 1,
-        name: "Laptop",
-        price: 999.99,
-        quantity: 1,
-        imageUrl: "https://bankofelectronics.com/905-medium_default/macbook.jpg"
-    },
-    {
-        id: 2,
-        name: "Headphones",
-        price: 199.99,
-        quantity: 1,
-        imageUrl: "https://m.media-amazon.com/images/I/41kW26ceLtL.jpg"
-    }
-];
 
 const CartItem = ({ item, onUpdateQuantity, onRemove }: {
     item: CartItem;
@@ -96,7 +79,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: {
 
 const CartPage = () => {
     useDocumentTitle('Cart');
-    const [cartItems, setCartItems] = useState<CartItem[]>(initialItems);
+    const [cartItems, setCartItems] = useState<CartItem[]>(INITIAL_CART_ITEMS);
 
     const handleUpdateQuantity = (id: number, newQuantity: number) => {
         setCartItems(items =>
