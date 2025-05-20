@@ -4,24 +4,11 @@
  * Provides theme switching functionality and persistence
  */
 
-import { createContext, useContext, useState, useCallback, useMemo, type ReactNode, useEffect } from 'react';
+import {  useState, useCallback, useMemo, type ReactNode, useEffect } from 'react';
 import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
 import { lightTheme, darkTheme } from '../theme';
+import { ThemeContext } from './ThemeContext';
 
-/**
- * Theme context type definition
- * @property isDarkMode - Current theme mode state
- * @property toggleTheme - Function to switch between light and dark modes
- */
-type ThemeContextType = {
-    isDarkMode: boolean;
-    toggleTheme: () => void;
-};
-
-const ThemeContext = createContext<ThemeContextType>({
-    isDarkMode: false,
-    toggleTheme: () => {},
-});
 
 /**
  * ThemeProvider Component
@@ -56,10 +43,3 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
         </ThemeContext.Provider>
     );
 };
-
-/**
- * Custom hook to access theme context
- * @returns ThemeContextType object containing isDarkMode state and toggleTheme function
- * @throws Error when used outside of ThemeProvider
- */
-export const useTheme = () => useContext(ThemeContext);
