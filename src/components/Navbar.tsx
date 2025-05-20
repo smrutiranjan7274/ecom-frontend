@@ -192,7 +192,10 @@ const Navbar = () => {
                 sx={{
                     '& .MuiDrawer-paper': {
                         width: 240,
-                        boxSizing: 'border-box'
+                        boxSizing: 'border-box',
+                        backgroundColor: 'background.paper', // Add this for proper background color
+                        borderRight: 1,
+                        borderColor: 'divider'
                     }
                 }}
             >
