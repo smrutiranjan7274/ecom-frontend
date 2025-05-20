@@ -63,12 +63,21 @@ const Navbar = () => {
                     onClick={() => setMobileOpen(false)}
                     sx={{
                         backgroundColor: isActive(item.path) ? 'primary.light' : 'transparent',
+                        color: 'text.primary', // Add this to ensure proper text color
                         '&:hover': {
                             backgroundColor: 'primary.light',
+                            color: 'primary.contrastText' // Add this for better hover contrast
                         }
                     }}
                 >
-                    <ListItemText primary={item.text} />
+                    <ListItemText 
+                        primary={item.text}
+                        sx={{
+                            '& .MuiListItemText-primary': {
+                                color: 'inherit' // This ensures the text inherits the ListItem color
+                            }
+                        }} 
+                    />
                 </ListItem>
             ))}
             {isAuthenticated && (
@@ -76,8 +85,10 @@ const Navbar = () => {
                     onClick={handleLogout}
                     sx={{
                         backgroundColor: 'transparent',
+                        color: 'error.main', // Make logout button distinctly visible
                         '&:hover': {
-                            backgroundColor: 'primary.light',
+                            backgroundColor: 'error.main',
+                            color: 'error.contrastText'
                         }
                     }}
                 >
