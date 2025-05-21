@@ -269,7 +269,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
         <>
             <Box
                 sx={{
-                    minHeight: '100vh',
+                    minHeight: 'fixed',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',

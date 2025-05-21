@@ -43,7 +43,7 @@ const Navbar = () => {
 
     const menuItems = isAuthenticated
         ? [...baseMenuItems, { text: 'Cart', path: '/cart' }, { text: 'Profile', path: '/profile' }]
-        : [...baseMenuItems, { text: 'Login', path: '/login' }, { text: 'Register', path: '/register' }];
+        : [...baseMenuItems, { text: 'Login', path: '/login' }];
 
     const isActive = (path: string) => {
         return location.pathname === path;
