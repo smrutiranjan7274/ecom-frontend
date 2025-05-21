@@ -27,5 +27,5 @@ export function isPositiveInteger(value: unknown): value is number {
 // Checks if a value is a valid password (min 8 chars, at least 1 letter and 1 number)
 export function isStrongPassword(value: unknown): value is string {
     if (typeof value !== 'string') return false;
-    return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(value);
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/.test(value);
 }
