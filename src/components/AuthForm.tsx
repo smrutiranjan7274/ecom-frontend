@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Box, Button, TextField, Typography, Paper, Link as MuiLink, MenuItem, CircularProgress } from '@mui/material';
+import { Snackbar, Alert } from '@mui/material';
 import apiClient from '../api/client';
 import type { AuthError, AuthResponse } from '../types/auth.type';
 import { isValidEmail, isStrongPassword } from '../utils/validators';
 import { useAuth } from '../hooks/useAuth';
+import type { SnackbarState } from '../types/snackbar.types';
 
 const FORM_INITIAL_STATE = {
     email: '',
@@ -29,10 +31,29 @@ interface AuthFormState {
 }
 
 const AuthForm = ({ mode }: AuthFormProps) => {
+    const [snackbar, setSnackbar] = useState<SnackbarState>({
+        open: false,
+        message: '',
+        severity: 'info'
+    });
     const [form, setForm] = useState<AuthFormState>(FORM_INITIAL_STATE);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const { login } = useAuth();
+
+    // Add this handler for closing the snackbar
+    const handleCloseSnackbar = () => {
+        setSnackbar(prev => ({ ...prev, open: false }));
+    };
+
+    // Replace the alert calls in validateForm with this function
+    const showMessage = (message: string, severity: SnackbarState['severity'] = 'error') => {
+        setSnackbar({
+            open: true,
+            message,
+            severity
+        });
+    };
 
     const isRegister = mode === 'register';
 
@@ -43,31 +64,31 @@ const AuthForm = ({ mode }: AuthFormProps) => {
 
     const validateForm = (): boolean => {
         if (!form.email || !form.password) {
-            alert('Email and password are required.');
+            showMessage('Email and password are required.', 'error');
             return false;
         }
         if (!isValidEmail(form.email)) {
-            alert('Please enter a valid email address.');
+            showMessage('Invalid email format.', 'error');
             return false;
         }
         if (!isStrongPassword(form.password)) {
-            alert('Password is not strong enough.');
+            showMessage('Password is not strong enough.', 'error'); 
             return false;
         }
         if (isRegister && !form.confirmPassword) {
-            alert('Please confirm your password.');
+            showMessage('Please confirm your password.', 'error');
             return false;
         }
         if (isRegister && form.password !== form.confirmPassword) {
-            alert('Passwords do not match.');
+            showMessage('Passwords do not match.', 'error');
             return false;
         }
         if (isRegister && !form.name) {
-            alert('Name is required.');
+            showMessage('Name is required.', 'error');
             return false;
         }
         if (isRegister && !form.role) {
-            alert('Role is required.');
+            showMessage('Role is required.', 'error');
             return false;
         }
         return true;
@@ -75,7 +96,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
 
     const handleAuthSuccess = (response: AuthResponse) => {
         if (response.token && response.email && response.name && response.role && response.id && response.message) {
-            alert(response.message); // Show success message
+            showMessage(response.message, 'success');
             login({
                 email: response.email,
                 name: response.name,
@@ -85,14 +106,14 @@ const AuthForm = ({ mode }: AuthFormProps) => {
             });
             setTimeout(() => navigate('/'), 1000);
         } else {
-            alert(response.message || 'Invalid response from server.');
+            showMessage(response.message || 'Invalid response from server.', 'error');
             // console.error('Invalid response:', response.message);
         }
     };
 
     const handleAuthError = (error: AuthError) => {
         const message = error.response?.data?.message || 'Something went wrong. Please try again.';
-        alert(message); // Show error message
+        showMessage(message, 'error');
         // console.error('Error:', error);
     };
 
@@ -300,6 +321,22 @@ const AuthForm = ({ mode }: AuthFormProps) => {
                     </Box>
                 </Paper>
             </Box>
+
+            <Snackbar
+                open={snackbar.open}
+                autoHideDuration={6000}
+                onClose={handleCloseSnackbar}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+                <Alert
+                    onClose={handleCloseSnackbar}
+                    severity={snackbar.severity}
+                    variant="filled"
+                    sx={{ width: '100%' }}
+                >
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
         </>
     );
 };
