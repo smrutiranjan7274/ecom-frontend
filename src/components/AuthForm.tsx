@@ -5,6 +5,7 @@ import apiClient from '../api/client';
 import type { AuthError, AuthResponse } from '../types/auth.type';
 // Import validators and formatters
 import { isValidEmail, isStrongPassword } from '../utils/validators';
+import { useAuth } from '../hooks/useAuth'; // Add this import
 
 // Constants
 const FORM_INITIAL_STATE = {
@@ -44,6 +45,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
     const [isLoading, setIsLoading] = useState(false);
     const [snackbar, setSnackbar] = useState<SnackbarState>(SNACKBAR_INITIAL_STATE);
     const navigate = useNavigate();
+    const { login } = useAuth(); // Get login from context
 
     const isRegister = mode === 'register';
 
@@ -92,12 +94,22 @@ const AuthForm = ({ mode }: AuthFormProps) => {
         return true;
     };
 
-    const handleAuthSuccess = (token: string) => {
-        if (!isRegister) {
-            localStorage.setItem('token', token);
-            showSnackbar('success', 'Login successful!');
+    const handleAuthSuccess = (response: AuthResponse) => {
+        // Set auth state using context
+        if (response.token && response.email && response.name && response.role) {
+            login({
+                email: response.email,
+                name: response.name,
+                role: response.role,
+                token: response.token,
+            });
+            showSnackbar('success', isRegister ? 'Registration successful!' : 'Login successful!');
+            setTimeout(() => navigate('/'), 1000);
         }
-        setTimeout(() => navigate('/'), 1000);
+        else {
+            showSnackbar('error', 'Invalid response from server');
+            console.error('Invalid response:', response);
+        }
     };
 
     const handleAuthError = (error: AuthError) => {
@@ -123,11 +135,11 @@ const AuthForm = ({ mode }: AuthFormProps) => {
 
         try {
             const response = await submitAuthRequest();
-            if (response.data.token) {
-                handleAuthSuccess(response.data.token);
+            if (response.data.token && response.data.email && response.data.role) {
+                handleAuthSuccess(response.data);
             } else {
-                showSnackbar('success', response.data.toString());
-                handleAuthSuccess(response.data.toString());
+                showSnackbar('error', 'Invalid response from server');
+                console.error('Invalid response:', response.data);
             }
         } catch (error) {
             handleAuthError(error as AuthError);

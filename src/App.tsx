@@ -12,6 +12,7 @@ import ProductList from './components/ProductList';
 import LoginPage from './components/LoginPage';
 import RegisterPage from './components/RegisterPage';
 import CartPage from './components/CartPage';
+import PrivateRoute from './components/PrivateRoute';
 
 /**
  * App Component
@@ -28,7 +29,11 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/products" element={<ProductList />} />
-          <Route path="/cart" element={<CartPage />} />
+          <Route path="/cart" element={
+            <PrivateRoute>
+              <CartPage />
+            </PrivateRoute>
+          } />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
         </Routes>

@@ -15,6 +15,7 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '../hooks/useTheme';
+import { useAuth } from '../hooks/useAuth'; // <-- Add this import
 
 /**
  * Navbar Component
@@ -32,7 +33,8 @@ const Navbar = () => {
     const isMobile = useMediaQuery(muiTheme.breakpoints.down('sm'));
     const location = useLocation();
     const navigate = useNavigate();
-    const isAuthenticated = false; // TODO: Replace with actual auth state
+    const { user, logout } = useAuth(); // <-- Use the auth context
+    const isAuthenticated = !!user;     // <-- Determine auth state
 
     const baseMenuItems = [
         { text: 'Home', path: '/' },
@@ -49,7 +51,7 @@ const Navbar = () => {
     };
 
     const handleLogout = () => {
-        // TODO: Implement logout logic
+        logout();           // <-- Call logout from context
         navigate('/login');
     };
 
