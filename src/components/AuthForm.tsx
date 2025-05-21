@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Box, Button, TextField, Typography, Paper, Link as MuiLink, Alert, CircularProgress, Snackbar } from '@mui/material';
 import apiClient from '../api/client';
-import type { AuthResponse } from '../types/auth.type';
+import type { AuthError, AuthResponse } from '../types/auth.type';
 // Import validators and formatters
 import { isValidEmail, isStrongPassword } from '../utils/validators';
 
@@ -100,10 +100,10 @@ const AuthForm = ({ mode }: AuthFormProps) => {
         setTimeout(() => navigate('/'), 1000);
     };
 
-    const handleAuthError = (error: unknown) => {
+    const handleAuthError = (error: AuthError) => {
         const message = 'Something went wrong. Please try again.';
-        showSnackbar('error', message);
-        console.error('Authentication error:', error);
+        showSnackbar('error', error.response?.data as string || message);
+        // console.error('Authentication error:', error);
     };
 
     const submitAuthRequest = async () => {
@@ -130,7 +130,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
                 handleAuthSuccess(response.data.toString());
             }
         } catch (error) {
-            handleAuthError(error);
+            handleAuthError(error as AuthError);
         } finally {
             setIsLoading(false);
         }
