@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { formatCurrency } from '../utils/formatters';
 import { INITIAL_CART_ITEMS } from '../constants/cartConstants';
+import { Link } from 'react-router-dom';
 
 interface CartItem {
     id: number;
@@ -179,7 +180,8 @@ const CartPage = () => {
                     <Button
                         variant="contained"
                         size="large"
-                        href="/products"
+                        component={Link} to="/products"
+
                         sx={{
                             mt: 2,
                             py: 1.5,
