@@ -43,24 +43,31 @@ const AuthForm = ({ mode }: AuthFormProps) => {
 
     const validateForm = (): boolean => {
         if (!form.email || !form.password) {
+            alert('Email and password are required.');
             return false;
         }
         if (!isValidEmail(form.email)) {
+            alert('Please enter a valid email address.');
             return false;
         }
         if (!isStrongPassword(form.password)) {
+            alert('Password is not strong enough.');
             return false;
         }
         if (isRegister && !form.confirmPassword) {
+            alert('Please confirm your password.');
             return false;
         }
         if (isRegister && form.password !== form.confirmPassword) {
+            alert('Passwords do not match.');
             return false;
         }
         if (isRegister && !form.name) {
+            alert('Name is required.');
             return false;
         }
         if (isRegister && !form.role) {
+            alert('Role is required.');
             return false;
         }
         return true;
@@ -68,6 +75,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
 
     const handleAuthSuccess = (response: AuthResponse) => {
         if (response.token && response.email && response.name && response.role && response.id && response.message) {
+            alert(response.message); // Show success message
             login({
                 email: response.email,
                 name: response.name,
@@ -77,13 +85,15 @@ const AuthForm = ({ mode }: AuthFormProps) => {
             });
             setTimeout(() => navigate('/'), 1000);
         } else {
-            console.error('Invalid response:', response.message);
+            alert(response.message || 'Invalid response from server.');
+            // console.error('Invalid response:', response.message);
         }
     };
 
     const handleAuthError = (error: AuthError) => {
-        const message = 'Something went wrong. Please try again.';
-        console.error(error.response?.data || message);
+        const message = error.response?.data?.message || 'Something went wrong. Please try again.';
+        alert(message); // Show error message
+        // console.error('Error:', error);
     };
 
     const submitAuthRequest = async () => {

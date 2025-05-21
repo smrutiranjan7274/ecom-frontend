@@ -11,6 +11,8 @@ export interface AuthError {
     message?: string;
     status?: number;
     response?: {
-        data?: string;
+        data?: {
+            message?: string;
+        }
     };
 }
