@@ -140,6 +140,14 @@ const ErrorState = ({ error }: { error: string }) => (
     </Grid>
 );
 
+const NoProductsState = () => (
+    <Grid container justifyContent="center" sx={{ py: 4 }}>
+        <Alert severity="info" sx={{ minWidth: 300 }}>
+            No products available at the moment.
+        </Alert>
+    </Grid>
+);
+
 // Main Component
 const ProductList = () => {
     useDocumentTitle('Products');
@@ -177,6 +185,7 @@ const ProductList = () => {
 
     if (loading) return <LoadingState />;
     if (error) return <ErrorState error={error} />;
+    if (!products.length) return <NoProductsState />;
 
     return (
         <Box

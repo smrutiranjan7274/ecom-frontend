@@ -1,5 +1,4 @@
-import { Box, Typography, Button, Container, Grid } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Box, Typography, Container, Grid } from '@mui/material';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { FEATURES } from '../constants/themeConstants';
 
@@ -44,27 +43,11 @@ const HeroSection = () => (
             variant="h5"
             component="h2"
             color="text.secondary"
-            paragraph
             sx={{ mb: 4 }}
         >
             Discover amazing products at great prices
         </Typography>
-        <Button
-            component={Link}
-            to="/products"
-            variant="contained"
-            size="large"
-            sx={{
-                mt: 2,
-                px: 5,
-                py: 1.5,
-                fontSize: '1.1rem',
-                borderRadius: 3,
-                boxShadow: 2,
-            }}
-        >
-            Shop Now
-        </Button>
+        
     </Box>
 );
 
