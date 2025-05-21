@@ -39,11 +39,10 @@ const Navbar = () => {
     const baseMenuItems = [
         { text: 'Home', path: '/' },
         { text: 'Products', path: '/products' },
-        { text: 'Cart', path: '/cart' },
     ];
 
     const menuItems = isAuthenticated
-        ? [...baseMenuItems, { text: 'Profile', path: '/profile' }]
+        ? [...baseMenuItems, { text: 'Cart', path: '/cart' }, { text: 'Profile', path: '/profile' }]
         : [...baseMenuItems, { text: 'Login', path: '/login' }, { text: 'Register', path: '/register' }];
 
     const isActive = (path: string) => {
