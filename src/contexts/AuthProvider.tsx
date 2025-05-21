@@ -4,6 +4,7 @@ import type { User } from "../types/user.types";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const id = localStorage.getItem('id');
@@ -20,6 +21,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 name: name ?? undefined
             });
         }
+        setLoading(false);
     }, []);
 
     const login = (user: User) => {
@@ -39,6 +41,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         localStorage.removeItem('role');
         localStorage.removeItem('name');
     };
+
+    if (loading) return null;
 
     return (
         <AuthContext.Provider value={{ user, login, logout }}>

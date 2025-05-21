@@ -96,7 +96,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
 
     const handleAuthSuccess = (response: AuthResponse) => {
         // Set auth state using context
-        if (response.token && response.email && response.name && response.role) {
+        if (response.token && response.email && response.name && response.role && response.id) {
             login({
                 email: response.email,
                 name: response.name,

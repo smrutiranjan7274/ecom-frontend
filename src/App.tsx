@@ -13,6 +13,8 @@ import LoginPage from './components/LoginPage';
 import RegisterPage from './components/RegisterPage';
 import CartPage from './components/CartPage';
 import PrivateRoute from './components/PrivateRoute';
+import ProfilePage from './components/ProfilePage';
+import PublicRoute from './components/PublicRoute';
 
 /**
  * App Component
@@ -34,8 +36,21 @@ function App() {
               <CartPage />
             </PrivateRoute>
           } />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/login" element={
+            <PublicRoute>
+              <LoginPage />
+            </PublicRoute>
+          } />
+          <Route path="/register" element={
+            <PublicRoute>
+              <RegisterPage />
+            </PublicRoute>
+          } />
+          <Route path="/profile" element={
+            <PrivateRoute>
+              <ProfilePage />
+            </PrivateRoute>
+          } />
         </Routes>
       </Container>
     </>
