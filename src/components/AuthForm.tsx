@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Box, Button, TextField, Typography, Paper, Link as MuiLink, Alert, CircularProgress, Snackbar } from '@mui/material';
+import { Box, Button, TextField, Typography, Paper, Link as MuiLink, Alert, CircularProgress, Snackbar, MenuItem } from '@mui/material';
 import apiClient from '../api/client';
 import type { AuthError, AuthResponse } from '../types/auth.type';
 // Import validators and formatters
@@ -11,7 +11,9 @@ import { useAuth } from '../hooks/useAuth'; // Add this import
 const FORM_INITIAL_STATE = {
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    name: '',
+    role: 'USER', // default role
 };
 
 const SNACKBAR_INITIAL_STATE = {
@@ -31,6 +33,8 @@ interface AuthFormState {
     email: string;
     password: string;
     confirmPassword: string;
+    name: string;
+    role: string;
 }
 
 type SnackbarState = {
@@ -91,12 +95,22 @@ const AuthForm = ({ mode }: AuthFormProps) => {
             return false;
         }
 
+        if (isRegister && !form.name) {
+            showSnackbar('error', 'Please enter your name');
+            return false;
+        }
+
+        if (isRegister && !form.role) {
+            showSnackbar('error', 'Please select a role');
+            return false;
+        }
+
         return true;
     };
 
     const handleAuthSuccess = (response: AuthResponse) => {
         // Set auth state using context
-        if (response.token && response.email && response.name && response.role && response.id) {
+        if (response.token && response.email && response.name && response.role && response.id && response.message) {
             login({
                 email: response.email,
                 name: response.name,
@@ -104,12 +118,13 @@ const AuthForm = ({ mode }: AuthFormProps) => {
                 token: response.token,
                 id: response.id
             });
-            showSnackbar('success', isRegister ? 'Registration successful!' : 'Login successful!');
+            showSnackbar('success', response.message);
+            // Redirect to home page after a short delay
             setTimeout(() => navigate('/'), 1000);
         }
         else {
             showSnackbar('error', 'Invalid response from server');
-            console.error('Invalid response:', response);
+            console.error('Invalid response:', response.message);
         }
     };
 
@@ -121,10 +136,18 @@ const AuthForm = ({ mode }: AuthFormProps) => {
 
     const submitAuthRequest = async () => {
         const endpoint = isRegister ? '/auth/register' : '/auth/login';
-        const response = await apiClient.post<AuthResponse>(endpoint, {
-            email: form.email,
-            password: form.password
-        });
+        const payload = isRegister
+            ? {
+                email: form.email,
+                password: form.password,
+                name: form.name,
+                role: form.role,
+            }
+            : {
+                email: form.email,
+                password: form.password,
+            };
+        const response = await apiClient.post<AuthResponse>(endpoint, payload);
         return response;
     };
 
@@ -136,7 +159,13 @@ const AuthForm = ({ mode }: AuthFormProps) => {
 
         try {
             const response = await submitAuthRequest();
-            if (response.data.token && response.data.email && response.data.role) {
+            // Accept both 200 (login) and 201 (register) as success
+            if (
+                (response.status === 200 || response.status === 201) &&
+                response.data.token &&
+                response.data.email &&
+                response.data.role
+            ) {
                 handleAuthSuccess(response.data);
             } else {
                 showSnackbar('error', 'Invalid response from server');
@@ -152,6 +181,21 @@ const AuthForm = ({ mode }: AuthFormProps) => {
     // Render helpers
     const renderFormFields = () => (
         <>
+            {isRegister && (
+                <TextField
+                    label="Name"
+                    name="name"
+                    fullWidth
+                    margin="normal"
+                    value={form.name}
+                    onChange={handleChange}
+                    required
+                    autoComplete="name"
+                    disabled={isLoading}
+                    sx={{ bgcolor: 'background.paper', borderRadius: 2 }}
+                />
+            )}
+
             <TextField
                 label="Email"
                 name="email"
@@ -165,6 +209,24 @@ const AuthForm = ({ mode }: AuthFormProps) => {
                 disabled={isLoading}
                 sx={{ bgcolor: 'background.paper', borderRadius: 2 }}
             />
+
+            {isRegister && (
+                <TextField
+                    select
+                    label="Role"
+                    name="role"
+                    fullWidth
+                    margin="normal"
+                    value={form.role}
+                    onChange={handleChange}
+                    required
+                    disabled={isLoading}
+                    sx={{ bgcolor: 'background.paper', borderRadius: 2 }}
+                >
+                    <MenuItem value="USER">User</MenuItem>
+                    <MenuItem value="SELLER">Seller</MenuItem>
+                </TextField>
+            )}
 
             <TextField
                 label="Password"
