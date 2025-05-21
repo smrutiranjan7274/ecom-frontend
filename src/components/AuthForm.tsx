@@ -104,7 +104,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
                 token: response.token,
                 id: response.id
             });
-            setTimeout(() => navigate('/'), 1000);
+            setTimeout(() => navigate('/'), 2000);
         } else {
             showMessage(response.message || 'Invalid response from server.', 'error');
             // console.error('Invalid response:', response.message);
