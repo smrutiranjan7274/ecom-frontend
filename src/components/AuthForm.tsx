@@ -1,28 +1,19 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Box, Button, TextField, Typography, Paper, Link as MuiLink, Alert, CircularProgress, Snackbar, MenuItem } from '@mui/material';
+import { Box, Button, TextField, Typography, Paper, Link as MuiLink, MenuItem, CircularProgress } from '@mui/material';
 import apiClient from '../api/client';
 import type { AuthError, AuthResponse } from '../types/auth.type';
-// Import validators and formatters
 import { isValidEmail, isStrongPassword } from '../utils/validators';
-import { useAuth } from '../hooks/useAuth'; // Add this import
+import { useAuth } from '../hooks/useAuth';
 
-// Constants
 const FORM_INITIAL_STATE = {
     email: '',
     password: '',
     confirmPassword: '',
     name: '',
-    role: 'USER', // default role
+    role: 'USER',
 };
 
-const SNACKBAR_INITIAL_STATE = {
-    open: false,
-    severity: 'success' as const,
-    message: ''
-};
-
-// Types
 type AuthMode = 'login' | 'register';
 
 interface AuthFormProps {
@@ -37,79 +28,45 @@ interface AuthFormState {
     role: string;
 }
 
-type SnackbarState = {
-    open: boolean;
-    severity: 'success' | 'error';
-    message: string;
-};
-
 const AuthForm = ({ mode }: AuthFormProps) => {
-    // State
     const [form, setForm] = useState<AuthFormState>(FORM_INITIAL_STATE);
     const [isLoading, setIsLoading] = useState(false);
-    const [snackbar, setSnackbar] = useState<SnackbarState>(SNACKBAR_INITIAL_STATE);
     const navigate = useNavigate();
-    const { login } = useAuth(); // Get login from context
+    const { login } = useAuth();
 
     const isRegister = mode === 'register';
 
-    // Handlers
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setForm(prev => ({ ...prev, [name]: value }));
     };
 
-    const showSnackbar = (severity: 'success' | 'error', message: string) => {
-        setSnackbar({ open: true, severity, message });
-    };
-
-    const handleSnackbarClose = () => {
-        setSnackbar(prev => ({ ...prev, open: false }));
-    };
-
     const validateForm = (): boolean => {
         if (!form.email || !form.password) {
-            showSnackbar('error', 'Please fill all required fields');
             return false;
         }
-
-        // Use isValidEmail
         if (!isValidEmail(form.email)) {
-            showSnackbar('error', 'Please enter a valid email address');
             return false;
         }
-
-        // Use isStrongPassword
         if (!isStrongPassword(form.password)) {
-            showSnackbar('error', 'Password must be at least 8 characters, include at least 1 letter and 1 number');
             return false;
         }
-
         if (isRegister && !form.confirmPassword) {
-            showSnackbar('error', 'Please confirm your password');
             return false;
         }
-
         if (isRegister && form.password !== form.confirmPassword) {
-            showSnackbar('error', 'Passwords do not match');
             return false;
         }
-
         if (isRegister && !form.name) {
-            showSnackbar('error', 'Please enter your name');
             return false;
         }
-
         if (isRegister && !form.role) {
-            showSnackbar('error', 'Please select a role');
             return false;
         }
-
         return true;
     };
 
     const handleAuthSuccess = (response: AuthResponse) => {
-        // Set auth state using context
         if (response.token && response.email && response.name && response.role && response.id && response.message) {
             login({
                 email: response.email,
@@ -118,20 +75,15 @@ const AuthForm = ({ mode }: AuthFormProps) => {
                 token: response.token,
                 id: response.id
             });
-            showSnackbar('success', response.message);
-            // Redirect to home page after a short delay
             setTimeout(() => navigate('/'), 1000);
-        }
-        else {
-            showSnackbar('error', 'Invalid response from server');
+        } else {
             console.error('Invalid response:', response.message);
         }
     };
 
     const handleAuthError = (error: AuthError) => {
         const message = 'Something went wrong. Please try again.';
-        showSnackbar('error', error.response?.data as string || message);
-        // console.error('Authentication error:', error);
+        console.error(error.response?.data || message);
     };
 
     const submitAuthRequest = async () => {
@@ -159,7 +111,6 @@ const AuthForm = ({ mode }: AuthFormProps) => {
 
         try {
             const response = await submitAuthRequest();
-            // Accept both 200 (login) and 201 (register) as success
             if (
                 (response.status === 200 || response.status === 201) &&
                 response.data.token &&
@@ -168,7 +119,6 @@ const AuthForm = ({ mode }: AuthFormProps) => {
             ) {
                 handleAuthSuccess(response.data);
             } else {
-                showSnackbar('error', 'Invalid response from server');
                 console.error('Invalid response:', response.data);
             }
         } catch (error) {
@@ -178,7 +128,6 @@ const AuthForm = ({ mode }: AuthFormProps) => {
         }
     };
 
-    // Render helpers
     const renderFormFields = () => (
         <>
             {isRegister && (
@@ -300,33 +249,6 @@ const AuthForm = ({ mode }: AuthFormProps) => {
         </Button>
     );
 
-    const renderSnackbar = () => (
-        <Snackbar
-            open={snackbar.open}
-            autoHideDuration={6000}
-            onClose={handleSnackbarClose}
-            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-            sx={{
-                position: 'fixed',
-                top: '80px !important',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                zIndex: 1400,
-                width: 'auto',
-                maxWidth: 'calc(100% - 40px)',
-            }}
-        >
-            <Alert
-                onClose={handleSnackbarClose}
-                severity={snackbar.severity}
-                variant="filled"
-                sx={{ width: '100%', boxShadow: 3 }}
-            >
-                {snackbar.message}
-            </Alert>
-        </Snackbar>
-    );
-
     return (
         <>
             <Box
@@ -368,7 +290,6 @@ const AuthForm = ({ mode }: AuthFormProps) => {
                     </Box>
                 </Paper>
             </Box>
-            {renderSnackbar()}
         </>
     );
 };
