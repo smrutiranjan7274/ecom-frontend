@@ -109,7 +109,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
     const submitAuthRequest = async () => {
         const endpoint = isRegister ? '/auth/register' : '/auth/login';
         const response = await apiClient.post<AuthResponse>(endpoint, {
-            username: form.email,
+            email: form.email,
             password: form.password
         });
         return response;
