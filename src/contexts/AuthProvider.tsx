@@ -22,10 +22,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const login = (user: User) => {
         setUser(user);
-        localStorage.setItem('token', user.token);
-        localStorage.setItem('email', user.email);
-        localStorage.setItem('id', user.id);
-        localStorage.setItem('role', user.role);
+        localStorage.setItem('token', user.token ?? '');
+        localStorage.setItem('email', user.email ?? '');
+        localStorage.setItem('id', user.id ?? '');
+        localStorage.setItem('role', user.role ?? '');
     };
 
     const logout = () => {
