@@ -102,6 +102,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
                 name: response.name,
                 role: response.role,
                 token: response.token,
+                id: response.id
             });
             showSnackbar('success', isRegister ? 'Registration successful!' : 'Login successful!');
             setTimeout(() => navigate('/'), 1000);

@@ -10,12 +10,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const role = localStorage.getItem('role');
         const token = localStorage.getItem('token');
         const email = localStorage.getItem('email');
+        const name = localStorage.getItem('name');
         if (token && email && id && role) {
             setUser({
                 id,
                 email,
                 token,
-                role
+                role,
+                name: name ?? undefined
             });
         }
     }, []);
@@ -26,6 +28,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         localStorage.setItem('email', user.email ?? '');
         localStorage.setItem('id', user.id ?? '');
         localStorage.setItem('role', user.role ?? '');
+        localStorage.setItem('name', user.name ?? '');
     };
 
     const logout = () => {
@@ -34,6 +37,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         localStorage.removeItem('email');
         localStorage.removeItem('id');
         localStorage.removeItem('role');
+        localStorage.removeItem('name');
     };
 
     return (
